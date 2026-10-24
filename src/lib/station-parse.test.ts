@@ -30,7 +30,7 @@ describe('station patterns are real Strudel', () => {
 
   it('200 dishes parse', async () => {
     for (let i = 0; i < 200; i++) await expect(haps(dishPattern(dish('w' + i)).code, 2)).resolves.toBeGreaterThan(0)
-  })
+  }, 30_000) // evaluates 200 patterns: ~2 s here, slower on CI runners
 
   it('ambient tracks parse and stay calm', async () => {
     expect(AMBIENT.length).toBeGreaterThanOrEqual(5)
