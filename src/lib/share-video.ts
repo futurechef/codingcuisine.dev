@@ -5,13 +5,14 @@
 // every frame gets an exact timestamp, so the clip is always 7.0 s, renders faster
 // than real time and keeps going if the tab is hidden.
 
-import { BufferTarget, CanvasSource, canEncodeVideo, Mp4OutputFormat, Output } from 'mediabunny'
+import { AudioBufferSource, BufferTarget, CanvasSource, canEncodeVideo, Mp4OutputFormat, Output } from 'mediabunny'
 import type { Dish } from './dish'
 import { prefersShareSheet } from './device'
 import { saveBlob, slug } from './download'
 import type { PlateLook } from './look'
 import { CLIP_SECONDS, drawShareFrame, FPS, plateFrameSvg, SHARE_SIZE, totalMinutes, type Ctx2D, type ShareFormat } from './share-frame'
 import { DRAW_SECONDS } from './plate'
+import { AUDIO_BITRATE, canAddAudio } from './share-audio'
 
 export const FONT_SPECS = ['italic 400 112px Newsreader', '400 44px Newsreader', '400 24px "JetBrains Mono"', '500 26px "JetBrains Mono"']
 const BITRATE = 8_000_000
@@ -45,6 +46,21 @@ export function createVideoProbe(probe: typeof canEncodeVideo = canEncodeVideo):
 }
 
 export const videoSupported = createVideoProbe()
+
+/**
+ * The dish's music for the clip, or null where it can't be had (no AAC encoder, Strudel
+ * failed to load or render): the video is then silent, as before, rather than failing.
+ */
+async function soundtrack(d: Dish): Promise<AudioBuffer | null> {
+  if (!(await canAddAudio())) return null
+  try {
+    const { renderDishAudio } = await import('./station-render')
+    return await renderDishAudio(d, CLIP_SECONDS)
+  } catch (e) {
+    console.warn('[share] video will be silent:', e)
+    return null
+  }
+}
 
 /** Timestamps (s) of every frame in the clip. */
 export function frameTimes(): number[] {
@@ -132,9 +148,16 @@ export async function makeShareVideo(
   const output = new Output({ format: new Mp4OutputFormat({ fastStart: 'in-memory' }), target: new BufferTarget() })
   const source = new CanvasSource(c, { codec: 'avc', bitrate: BITRATE, keyFrameInterval: 2 })
   output.addVideoTrack(source, { frameRate: FPS })
+  const music = await soundtrack(d)
+  const audio = music ? new AudioBufferSource({ codec: 'aac', bitrate: AUDIO_BITRATE }) : null
+  if (audio) output.addAudioTrack(audio)
   await output.start()
   const times = frameTimes()
   try {
+    if (audio && music) {
+      await audio.add(music)
+      audio.close()
+    }
     for (let i = 0; i < times.length; i++) {
       if (opts.signal?.aborted) throw new DOMException('Cancelled', 'AbortError')
       await renderer.draw(ctx, times[i])
