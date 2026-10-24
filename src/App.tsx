@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { DEFAULT_WORD, SURPRISE_WORDS } from './lib/dish'
 import { navigate, useLocation } from './lib/router'
+import { StationProvider } from './lib/station-state'
+import { RadioTab } from './components/RadioTab'
 import { routeSeo, useSeo } from './lib/seo'
 import { Home } from './screens/Home'
 import { Forks } from './screens/Forks'
@@ -84,6 +86,7 @@ export function App() {
   else screen = <Welcome k={k} />
 
   return (
+    <StationProvider>
     <div className="page">
       <header className="masthead">
         <a className="brand" href="/" onClick={e => { e.preventDefault(); navigate('/') }}>
@@ -102,6 +105,7 @@ export function App() {
               {label}
             </a>
           ))}
+          <RadioTab />
         </nav>
       </header>
       {screen}
@@ -114,5 +118,6 @@ export function App() {
         </div>
       </footer>
     </div>
+    </StationProvider>
   )
 }

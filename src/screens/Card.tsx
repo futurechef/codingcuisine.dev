@@ -5,6 +5,9 @@ import { Postmark, Stamp } from '../components/Stamp'
 import { useCuisineTheme } from '../lib/cuisine-theme'
 import { dish } from '../lib/dish'
 import { useLocation } from '../lib/router'
+import { StationCode } from '../components/StationCode'
+import { dishPattern } from '../lib/station'
+import { useStation } from '../lib/station-state'
 
 /** A 6 × 4 in recipe index card whose back is a postcard. */
 export function Card({ k }: { k: Kitchen }) {
@@ -12,6 +15,8 @@ export function Card({ k }: { k: Kitchen }) {
   const word = new URLSearchParams(search).get('w')?.trim() || k.plated
   const d = useMemo(() => dish(word), [word])
   useCuisineTheme(d.cu)
+  const music = useMemo(() => dishPattern(d), [d])
+  useStation({ kind: 'dish', pattern: music, take: 0, draws: false }, d.title)
   const again = 'codingcuisine.dev/plate?w=' + encodeURIComponent(word).replace(/%20/g, '+')
 
   return (
@@ -82,6 +87,7 @@ export function Card({ k }: { k: Kitchen }) {
         <ShareButton d={d} />
       </div>
       <p className="mono-label card__hint">PRINTS AS TWO 6 × 4 IN PAGES · FRONT THEN BACK · USE DOUBLE-SIDED ON CARD STOCK</p>
+      <StationCode pattern={music} title={d.title} />
     </main>
   )
 }

@@ -5,6 +5,9 @@ import { useCuisineTheme } from '../lib/cuisine-theme'
 import { dish } from '../lib/dish'
 import { prefersShareSheet } from '../lib/device'
 import { navigate } from '../lib/router'
+import { StationCode } from '../components/StationCode'
+import { dishPattern } from '../lib/station'
+import { useStation } from '../lib/station-state'
 
 const iso = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
@@ -35,6 +38,8 @@ export function Today({ k, date }: { k: Kitchen; date?: string }) {
   const d = useMemo(() => dish(today), [today])
   const y = useMemo(() => dish(yesterday), [yesterday])
   useCuisineTheme(d.cu)
+  const music = useMemo(() => dishPattern(d), [d])
+  useStation({ kind: 'dish', pattern: music, take: 0, draws: true }, d.title)
 
   const [copied, setCopied] = useState(false)
   useEffect(() => {
@@ -92,6 +97,7 @@ export function Today({ k, date }: { k: Kitchen; date?: string }) {
           </div>
         </div>
       </a>
+      <StationCode pattern={music} title={d.title} />
     </main>
   )
 }

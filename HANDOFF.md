@@ -13,6 +13,7 @@ State as of **2026-10-12**. Update this file at the end of each session.
 | `/today`, `/day/YYYY-MM-DD` | **Dish of the day:** the date is the seed, with seasonal produce. |
 | `/card?w=` | **Recipe card:** 6 × 4 in index card, recipe on the front, postcard back with the plate as a perforated stamp. Prints as two exact 6 × 4 in pages. **Share** button. `/postcard` redirects here. |
 | `/parts` | **Parts:** the component sheet. |
+| *(every page)* | **Station:** Radio in the nav plays ambient Strudel music across pages. Dish pages play the dish's own music, derived from its drawing, building layer by layer as the plate draws; the code shows beside the recipe and lights up as it plays. Welcome's circles play the word they write. Field guide and Parts play the ambient set. |
 
 Dish pages (Plate, Card, Forks, Today) take their cuisine's colour world;
 other pages keep cream and rust.
@@ -26,6 +27,7 @@ other pages keep cream and rust.
 | Plate drawing | `src/lib/plate*.ts`, `look.ts` | 7 plate shapes; 13 arrangements incl. `nest` (noodles/pasta), `mound` (grains), `swirl` (risotto, soft polenta), `egg`, `halves` (jammy eggs). |
 | Colour worlds | `src/lib/palettes.ts`, `cuisine-theme.ts` | `useCuisineTheme(cu)` sets CSS variables while a dish page is mounted, removes them on leave; 0.4 s ease (instant with reduced motion). Ink and plate paper never change. Tests enforce WCAG AA (4.5:1) in light and dark. |
 | Share video/image | `src/lib/share-frame.ts`, `share-video.ts`, `device.ts`, `src/components/ShareButton.tsx`, `ShareSheet.tsx`, `lazy-share.tsx` | Post 4:5 (1080 × 1350) / Story 9:16 (1080 × 1920). 7.0 s H.264 MP4 encoded frame-exact with WebCodecs + Mediabunny. Two steps: **Make video** → **Share video**; **Share image** is a PNG. Touch devices (`pointer: coarse`) share, desktops download. Sheet is lazy-loaded with a "Sharing couldn't load, Reload" fallback. `share-frame.ts` has no DOM access so part C can reuse it server-side. |
+| Station (music) | `src/lib/station*.ts(x)`, `instruments.ts`, `src/components/RadioTab.tsx`, `StationCode.tsx` | Strudel (`@strudel/web` 1.3.0, AGPL) loads only on the first Radio press. Pure `dishPattern(d)` → code string; `Transitioner` does fades (1.2 s dip before a drawing, else 3 s out + 3 s in) and the build-up; master level drives superdough's output gain. Synth voices only, no samples. Spec `docs/superpowers/specs/2026-10-24-station-design.md`; roadmap there. |
 | Tests | `src/**/*.test.ts(x)` | vitest, 583 tests (10 files). `npm test`. |
 
 ## History

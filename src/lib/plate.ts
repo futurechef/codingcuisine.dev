@@ -44,6 +44,11 @@ function normalise(look: PlateLook): Norm {
 
 const cache = new Map<string, Layer[]>()
 
+/** When each layer starts drawing (seconds): plate, sauce, main, crunch, herbs. */
+export const LAYER_AT: readonly number[] = [0, 0.9, 1.6, 2.4, 3.0]
+/** How long each layer takes to draw (seconds). */
+export const LAYER_STEP = 0.9
+
 /** Drawing order: plate → sauce → main → crunch → herbs. `at` is the start time in seconds. */
 function layers(look: PlateLook): Layer[] {
   const n = normalise(look)
@@ -63,11 +68,11 @@ function layers(look: PlateLook): Layer[] {
   const herbs = drawGarnish(n.garnish, ctx, rng(n.seed, 'garnish'), { crunch: n.crunch })
 
   const out: Layer[] = [
-    { marks: plate.marks.map(m => ({ ...m, occ: false })), fill: plate.fill, fillOpacity: 0.6, shift: [2, 4], at: 0 },
-    { marks: sauce, fill: n.sauce, fillOpacity: 0.65, shift: [3, 4], at: 0.9 },
-    { marks: main, fill: n.main, fillOpacity: 0.6, shift: [3, 4], at: 1.6 },
-    { marks: crunch, fill: n.crunch, fillOpacity: 0.8, shift: [1, 1.5], at: 2.4 },
-    { marks: herbs, fill: n.herb, fillOpacity: 0.6, shift: [1, 1.5], at: 3.0 },
+    { marks: plate.marks.map(m => ({ ...m, occ: false })), fill: plate.fill, fillOpacity: 0.6, shift: [2, 4], at: LAYER_AT[0] },
+    { marks: sauce, fill: n.sauce, fillOpacity: 0.65, shift: [3, 4], at: LAYER_AT[1] },
+    { marks: main, fill: n.main, fillOpacity: 0.6, shift: [3, 4], at: LAYER_AT[2] },
+    { marks: crunch, fill: n.crunch, fillOpacity: 0.8, shift: [1, 1.5], at: LAYER_AT[3] },
+    { marks: herbs, fill: n.herb, fillOpacity: 0.6, shift: [1, 1.5], at: LAYER_AT[4] },
   ]
   hideLines(out)
   for (const ly of out) for (const m of ly.marks) if (m.fill) m.fill = m.fill.map(orient)
@@ -90,7 +95,6 @@ function hideLines(ls: Layer[]) {
 }
 
 export const DRAW_SECONDS = 3.9
-const STEP = 0.9
 const INK = '#3a2418'
 
 const num = (v: number) => String(Math.round(v * 10) / 10)
@@ -133,18 +137,39 @@ export function plateLayersMarkup(look: PlateLook, mode: DrawMode): string[] {
   return layers(look).map((ly, i) => {
     const fills = ly.marks.map(m => fillSvg(m, ly)).join('')
     const inks = ly.marks.map(inkSvg).join('')
-    const k = mode.kind === 'frozen' ? Math.min(1, Math.max(0, (mode.t - ly.at) / STEP)) : 1
+    const k = mode.kind === 'frozen' ? Math.min(1, Math.max(0, (mode.t - ly.at) / LAYER_STEP)) : 1
     const op = mode.kind === 'smil' ? 0 : k
     const off = mode.kind === 'smil' ? 1 : 1 - k
     const shift = ` transform="translate(${ly.shift[0]} ${ly.shift[1]})"`
     const smilFill = mode.kind === 'smil'
-      ? `<animate attributeName="opacity" from="0" to="1" begin="${ly.at}s" dur="${STEP}s" fill="freeze"/>` : ''
+      ? `<animate attributeName="opacity" from="0" to="1" begin="${ly.at}s" dur="${LAYER_STEP}s" fill="freeze"/>` : ''
     const smilDraw = mode.kind === 'smil'
-      ? `<animate attributeName="stroke-dashoffset" from="1" to="0" begin="${ly.at}s" dur="${STEP}s" fill="freeze" calcMode="spline" keySplines=".42 0 .58 1" keyTimes="0;1"/>` : ''
+      ? `<animate attributeName="stroke-dashoffset" from="1" to="0" begin="${ly.at}s" dur="${LAYER_STEP}s" fill="freeze" calcMode="spline" keySplines=".42 0 .58 1" keyTimes="0;1"/>` : ''
     return (
       `<g class="tn d${i}" opacity="${op}" fill="${hex(ly.fill, '#efe2c2')}" fill-opacity="${ly.fillOpacity}" stroke="none"${shift}>${smilFill}${fills}</g>` +
       `<g class="dr d${i}" stroke-dasharray="1" stroke-dashoffset="${off}" fill="none" stroke="${INK}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">${smilDraw}${inks}</g>`
     )
+  })
+}
+
+export interface LayerStats {
+  /** Visible pen strokes (ink, thin and colour bands). */
+  strokes: number
+  /** Their total length, in drawing units (the 300×270 viewBox). */
+  length: number
+  meanLength: number
+  /** The layer's fill colour (hex). */
+  colour: string
+}
+
+const lineLength = (l: Pt[]) => l.reduce((t, p, i) => (i ? t + Math.hypot(p[0] - l[i - 1][0], p[1] - l[i - 1][1]) : 0), 0)
+
+/** How much pen each layer uses, in drawing order: what the station turns into notes. */
+export function plateLayerStats(look: PlateLook): LayerStats[] {
+  return layers(look).map(ly => {
+    const lines = ly.marks.flatMap(m => [...(m.ink ?? []), ...(m.thin ?? []), ...(m.band ?? [])]).filter(l => l.length > 1)
+    const length = lines.reduce((t, l) => t + lineLength(l), 0)
+    return { strokes: lines.length, length, meanLength: lines.length ? length / lines.length : 0, colour: hex(ly.fill, '#efe2c2') }
   })
 }
 
