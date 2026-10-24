@@ -3,6 +3,7 @@ import type { Kitchen } from '../App'
 import { PlateCard } from '../components/PlateCard'
 import { Radar } from '../components/Radar'
 import { ShareButton } from '../components/ShareButton'
+import { EggfaceCredit } from '../components/EggfaceCredit'
 import { useCuisineTheme } from '../lib/cuisine-theme'
 import { dish } from '../lib/dish'
 import { DOWNLOADS } from '../lib/download'
@@ -73,6 +74,7 @@ export function Home({ k }: { k: Kitchen }) {
           ) : !d.named && (
             <p className="mono-label mono-label--note">NO INGREDIENT IN “{d.seed.toUpperCase()}”, SO THE WORD CHOSE {d.produce.toUpperCase()}.</p>
           )}
+          <EggfaceCredit d={d} />
           <div className="chips">
             {d.chips.map(c => <span key={c} className="chip">{c}</span>)}
           </div>

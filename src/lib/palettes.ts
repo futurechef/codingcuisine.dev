@@ -34,6 +34,8 @@ const WORLDS: Record<string, Record<Mode, Base>> = {
   Levantine: { light: ['#f6ecda', '#ecdec6', '#7f2f4f'], dark: ['#1c1416', '#2a1d21', '#dc8aa8'] },
   // Harissa terracotta on clay cream
   'North African': { light: ['#f8ead9', '#eedbc4', '#a4471f'], dark: ['#1e1510', '#2c1f17', '#e8946a'] },
+  // Chive green on butter (the Eggface easter egg; not in the generator)
+  French: { light: ['#fbf4dc', '#f2e8c4', '#3f6a22'], dark: ['#17180f', '#222416', '#a8cf7a'] },
   // Turmeric on ghee cream
   Indian: { light: ['#fbf0d9', '#f1e2c2', '#865a00'], dark: ['#1d1810', '#2a2316', '#e0b04a'] },
   // Indigo on washi

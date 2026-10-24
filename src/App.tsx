@@ -3,6 +3,7 @@ import { DEFAULT_WORD, SURPRISE_WORDS } from './lib/dish'
 import { navigate, useLocation } from './lib/router'
 import { StationProvider } from './lib/station-state'
 import { RadioTab } from './components/RadioTab'
+import { COMPUTERDRAW_APP } from './lib/eggface'
 import { routeSeo, useSeo } from './lib/seo'
 import { Home } from './screens/Home'
 import { Forks } from './screens/Forks'
@@ -111,7 +112,7 @@ export function App() {
       {screen}
       <footer className="footer">
         <div className="footer__credit">
-          Inspired by Lingdong Huang's <a href="https://github.com/LingDong-/fishdraw">fishdraw</a>. Recipes in the ForkRecipe format.
+          Inspired by Lingdong Huang's <a href="https://github.com/LingDong-/fishdraw">fishdraw</a> and by <a href={COMPUTERDRAW_APP}>Computerdraw</a>. Recipes in the ForkRecipe format.
         </div>
         <div className="mono-label">
           CODINGCUISINE.DEV · PLATEDRAW · <a href="https://github.com/futurechef/codingcuisine.dev">SOURCE</a> · AGPL-3.0

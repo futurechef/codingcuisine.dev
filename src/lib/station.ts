@@ -66,6 +66,7 @@ export const MOTIF: Record<Kind, { notes: string; voice: Instrument | 'lead' }> 
   swirl: { notes: '0 2 4 7 4 2', voice: 'glass' },
   egg: { notes: '4 ~ ~ ~ ~ ~ ~ ~', voice: 'bell' },
   halves: { notes: '<[0 2 4 ~] [4 2 0 ~]>', voice: 'lead' },
+  omelette: { notes: '0 ~ ~ 2 ~ ~ 4 ~', voice: 'warm' },
 }
 
 /** Plate shape → the room the dish plays in. */
@@ -97,6 +98,7 @@ export const GARNISH_VOICE: Record<Garnish, Instrument> = {
   flake: 'bell',
   zest: 'sparkle',
   chilli: 'warm',
+  face: 'bell',
 }
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v))
@@ -129,6 +131,7 @@ const scale = (s: CuisineSound, octave: number) => `"${s.root}${octave}:${s.mode
 
 /** The dish's music. `stats` defaults to the dish's own drawing (a seam for tests). */
 export function dishPattern(d: Dish, stats: LayerStats[] = plateLayerStats(d)): StationPattern {
+  if (d.easter === 'eggface') return eggfacePattern()
   const s = CUISINE_SOUND[d.cu] ?? FALLBACK
   const r = rng(d.seed, 'station')
   const [, , sour, , umami] = d.r
@@ -161,6 +164,17 @@ export function dishPattern(d: Dish, stats: LayerStats[] = plateLayerStats(d)): 
   const sparkle = GARNISH_VOICE[d.garnish?.[0] ?? 'leaf'] ?? 'sparkle'
   const herbs = `n(irand(8).segment(${density})).scale(${scale(s, 5)}).degradeBy(.6).${voice(sparkle)}.velocity(.5)`
 
+  return assemble({
+    header: `// food, cooked by code · ${s.root} ${s.mode.replace(/:/g, ' ')}`,
+    cpm, room, label: d.cu,
+    layers: [plate, sauce, main, crunch, herbs],
+    notes: ['plate: the drone', 'sauce: the bass', 'main: the arrangement', 'crunch: soft ticks', 'herbs: sparkle'],
+  })
+}
+
+/** Five layer sounds → the full station code. */
+function assemble(o: { header: string; cpm: number; room: { room: number; size: number; delay: number }; label: string; layers: string[]; notes: string[] }): StationPattern {
+  const { cpm, room } = o
   // Each layer comes in when it's drawn: its first note is shifted to the layer's draw time
   // (the engine restarts the cycle at every change, so cycle 0 is when the drawing starts).
   // Anything that would have sounded before then (the tail of the shifted cycle) is filtered out.
@@ -168,17 +182,35 @@ export function dishPattern(d: Dish, stats: LayerStats[] = plateLayerStats(d)): 
     const at = Math.round(LAYER_AT[i] * (cpm / 60) * 1000) / 1000
     return at ? `.late(${at}).filterWhen(t => t >= ${at})` : ''
   }
-  const codes = [plate, sauce, main, crunch, herbs].map((c, i) => `${c}${c === 'silence' ? '' : late(i)}.gain(layer(${i}))`)
-  const notes = ['plate: the drone', 'sauce: the bass', 'main: the arrangement', 'crunch: soft ticks', 'herbs: sparkle']
+  const codes = o.layers.map((c, i) => `${c}${c === 'silence' ? '' : late(i)}.gain(layer(${i}))`)
   const parts = LAYERS.map((layer, i) => ({ layer, at: LAYER_AT[i], code: codes[i] }))
 
   const code = [
-    `// food, cooked by code · ${s.root} ${s.mode.replace(/:/g, ' ')}`,
+    o.header,
     `setcpm(${cpm})`,
     'stack(',
-    ...parts.map((p, i) => `  // ${notes[i]}\n  ${p.code},`),
+    ...parts.map((p, i) => `  // ${o.notes[i]}\n  ${p.code},`),
     `).room(${room.room}).roomsize(${room.size}).delay(${room.delay}).delaytime(.375).delayfeedback(.3)`,
   ].join('\n')
 
-  return { code, parts, cpm, label: d.cu }
+  return { code, parts, cpm, label: o.label }
+}
+
+/**
+ * Eggface's song, from Eggface Music Land: the letters are the notes, E G G F A C E.
+ * The tune comes in as the omelette draws and its last E lands with the chive face.
+ */
+function eggfacePattern(): StationPattern {
+  return assemble({
+    header: '// eggface: the word is the tune · e g g f a c e',
+    cpm: 20, room: ROOM.coupe, label: 'French',
+    layers: [
+      `n("<0 [0,4]>").scale("C3:major").${voice('drone')}.lpf(900).slow(4).velocity(.6)`,
+      `n("0").scale("C2:major").${voice('bass')}.slow(4).velocity(.7)`,
+      `note("e4 g4 g4 f4 a4 c5 e5@2").${voice('pluck')}.release(.5).lpf(3200).velocity(.9)`,
+      `n("0(2,16)").scale("C5:major").${voice('tick')}.velocity(.3)`,
+      `note("<e5 ~>").slow(2).${voice('bell')}.velocity(.5)`,
+    ],
+    notes: ['plate: the drone', 'butter: the bass', 'omelette: e g g f a c e', 'herbs: soft ticks', 'face: a bell'],
+  })
 }

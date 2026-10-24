@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import type { Kitchen } from '../App'
 import { ExplodedPlate } from '../components/ExplodedPlate'
+import { EggfaceCredit } from '../components/EggfaceCredit'
 import { useCuisineTheme } from '../lib/cuisine-theme'
 import { dish } from '../lib/dish'
 import { useLocation } from '../lib/router'
@@ -22,6 +23,7 @@ export function Anatomy({ k }: { k: Kitchen }) {
       <h1 className="display">Anatomy of a plate.</h1>
       <h2 className="display display--h2">{d.title}</h2>
       <p className="lede">Five layers, in the order they go down. Tap one to see what’s in it and how it’s made.</p>
+      <EggfaceCredit d={d} />
       <ExplodedPlate key={word} d={d} />
       <StationCode pattern={music} title={d.title} />
     </main>

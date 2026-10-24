@@ -8,6 +8,7 @@
 import type { Garnish, PlateLook, Shape } from './look'
 import { CHEESE, CUISINES, INGREDIENTS, overrideKind, SWAPS, SWEET_FRUIT, TECHNIQUES, type Crunch, type Cuisine, type F, type Ingredient as Produce, type Sauce, type Season } from './pantry'
 import { hash, rng } from './rng'
+import { eggfaceDish, isEggface } from './eggface'
 
 export type { Kind, PlateLook, Shape } from './look'
 export { hash } from './rng'
@@ -41,6 +42,8 @@ export interface Dish extends PlateLook {
   swappedFrom?: string
   /** A tongue-in-cheek line about the swap. */
   swapQuip?: string
+  /** A hand-made easter-egg dish instead of a generated one. */
+  easter?: 'eggface'
 }
 
 export const FLAVOURS = ['Sweet', 'Salty', 'Sour', 'Bitter', 'Umami', 'Heat']
@@ -262,6 +265,7 @@ const cache = new Map<string, Dish>()
 
 export function dish(word: string): Dish {
   const w = (word || 'leek').trim() || 'leek'
+  if (isEggface(w)) return eggfaceDish()
   let d = cache.get(w)
   if (!d) {
     d = compose(choose(w))

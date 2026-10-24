@@ -168,8 +168,31 @@ function chilli(c: Ctx, r: Rng): Mark {
   return { fill, ink: fill.map(closed), inkW: 0.95, thin, thinW: 0.6, fc: '#c8442f', fo: 0.75 }
 }
 
+/** Chive green, for the face. */
+export const CHIVE = '#5f8f3a'
+
+/**
+ * Eggface's face, in chives, on the middle of the food: two raised brows, two round eyes
+ * (a dot of black pepper in each), a little nose and a small mouth.
+ */
+function face(c: Ctx, r: Rng): Mark[] {
+  const b = c.food.length ? bbox(c.food.map(o => o.pts)) : null
+  const cx = b ? (b.x0 + b.x1) / 2 : c.bed.cx, cy = b ? (b.y0 + b.y1) / 2 : c.bed.cy
+  const k = ((b ? Math.min(b.x1 - b.x0, (b.y1 - b.y0) * 1.6) : 80) / 80) * 1.7 // fill most of the food
+  const line = (pts: Pt[]) => pts.map(([x, y]) => [cx + x * k, cy + y * k] as Pt)
+  const brow = (dx: number) => line(quad([dx - 7, -9], [dx, -13 - r.range(0, 1.2)], [dx + 7, -10]))
+  const chives = [brow(-11), brow(11), line(quad([0.5, 1.5], [2.2, 5], [-0.5, 6.5])), line(quad([-4, 11], [0, 12.5], [4, 10.6]))]
+  const eyes = [-10, 10].map(dx => line(ellipse(dx, -2, 4.2, 4.6)))
+  const pupils = [-9, 11].map(dx => line(ellipse(dx, -1.4, 1.5, 1.6)))
+  return [
+    { band: chives, bandW: 2.4 * Math.max(0.8, k), ink: chives, inkW: 0.85, fc: CHIVE, fo: 0.9, occ: false },
+    { fill: eyes, ink: eyes.map(closed), inkW: 0.85, fc: '#fbf6ea', fo: 1, occ: false },
+    { fill: pupils, ink: pupils.map(closed), inkW: 0.75, fc: '#3a2418', fo: 1, occ: false },
+  ]
+}
+
 export function drawGarnish(list: Garnish[], c: Ctx, r: Rng, col: Colours): Mark[] {
-  return list.map(g => {
+  return list.flatMap(g => {
     switch (g) {
       case 'micro': return micro(c, r)
       case 'seed': return seed(c, r)
@@ -178,6 +201,7 @@ export function drawGarnish(list: Garnish[], c: Ctx, r: Rng, col: Colours): Mark
       case 'flake': return flake(c, r)
       case 'zest': return zest(c, r)
       case 'chilli': return chilli(c, r)
+      case 'face': return face(c, r)
       default: return leaf(c, r)
     }
   })

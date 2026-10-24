@@ -22,14 +22,14 @@ describe('shade', () => {
 
 describe('cuisine palettes', () => {
   it('has a palette for every cuisine in the pantry, and none for cuisines that do not exist', () => {
-    expect(Object.keys(PALETTES).sort()).toEqual(CUISINES.map(c => c.cu).sort())
+    expect(Object.keys(PALETTES).sort()).toEqual([...CUISINES.map(c => c.cu), 'French'].sort()) // French: the Eggface easter egg
   })
 
   it('falls back to the default cream and rust for an unknown cuisine', () => {
     expect(palette('Martian', 'light').acc).toBe('#b8452e')
   })
 
-  for (const cu of CUISINES.map(c => c.cu)) {
+  for (const cu of [...CUISINES.map(c => c.cu), 'French']) {
     for (const mode of MODES) {
       describe(`${cu} · ${mode}`, () => {
         const p = palette(cu, mode)
