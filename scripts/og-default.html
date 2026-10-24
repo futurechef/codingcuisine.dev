@@ -1,0 +1,86 @@
+<!doctype html>
+<!--
+  Renders public/og/default.png, the 1200 × 630 share image used for og:image,
+  twitter:image and the Recipe JSON-LD until part C serves one per dish.
+
+  How it was made (re-run after changing the look):
+    1. npm run dev
+    2. Open http://localhost:5173/scripts/og-default.html in Chromium (Playwright)
+       with a 1200 × 630 viewport at device scale 1.
+    3. Wait for body[data-ready="1"], screenshot the viewport, save it as
+       public/og/default.png and check it is 1200 × 630.
+
+  The plate is the default dish ("take a leek"), finished, from plateFrameSvg():
+  geometry and hex colours only. All text is drawn with fillText; no words go
+  into SVG markup. Colours match the share frame (paper, ink, muted).
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>OG default image</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=block" rel="stylesheet" />
+    <style>
+      html, body { margin: 0; padding: 0; background: #fbf6ea; overflow: hidden; }
+      canvas { display: block; width: 1200px; height: 630px; }
+    </style>
+  </head>
+  <body>
+    <canvas id="og" width="1200" height="630"></canvas>
+    <script type="module">
+      import { DEFAULT_WORD, dish } from '/src/lib/dish.ts'
+      import { DRAW_SECONDS } from '/src/lib/plate.ts'
+      import { plateFrameSvg } from '/src/lib/share-frame.ts'
+
+      const PAPER = '#fbf6ea', INK = '#3a2418', MUTE = '#6e5a4c', RULE = '#e4d9c3'
+      const W = 1200, H = 630
+
+      await Promise.all([
+        'italic 400 84px Newsreader', '400 34px Newsreader', '500 24px "JetBrains Mono"', '400 22px "JetBrains Mono"',
+      ].map(spec => document.fonts.load(spec, 'Platedraw codingcuisine.dev Food, drawn by code. Give it a word')))
+
+      const d = dish(DEFAULT_WORD)
+      const url = URL.createObjectURL(new Blob([plateFrameSvg(d, DRAW_SECONDS + 1)], { type: 'image/svg+xml' }))
+      const plate = new Image()
+      plate.src = url
+      await plate.decode()
+
+      const ctx = document.getElementById('og').getContext('2d')
+      ctx.fillStyle = PAPER
+      ctx.fillRect(0, 0, W, H)
+
+      // Plate on the left: 300 × 270 viewBox scaled to 600 × 540.
+      ctx.drawImage(plate, 30, 45, 600, 540)
+
+      // A hairline between plate and words.
+      ctx.fillStyle = RULE
+      ctx.fillRect(660, 120, 2, 390)
+
+      // Words on the right.
+      const x = 712
+      ctx.textAlign = 'left'
+      ctx.textBaseline = 'alphabetic'
+      ctx.fillStyle = MUTE
+      ctx.font = '500 24px "JetBrains Mono"'
+      ctx.letterSpacing = '5px'
+      ctx.fillText('PLATEDRAW', x, 196)
+      ctx.letterSpacing = '0px'
+
+      ctx.fillStyle = INK
+      ctx.font = 'italic 400 84px Newsreader'
+      ctx.fillText('Food, drawn', x, 296)
+      ctx.fillText('by code.', x, 382)
+
+      ctx.fillStyle = MUTE
+      ctx.font = '400 34px Newsreader'
+      ctx.fillText('Give it a word, get a dish.', x, 448)
+
+      ctx.fillStyle = INK
+      ctx.font = '500 24px "JetBrains Mono"'
+      ctx.letterSpacing = '3px'
+      ctx.fillText('codingcuisine.dev', x, 520)
+
+      URL.revokeObjectURL(url)
+      document.body.dataset.ready = '1'
+    </script>
+  </body>
+</html>
