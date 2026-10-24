@@ -52,9 +52,13 @@ AlcheMISE (the meal planner). It shares only AlcheMISE's Firebase project.
 - **Keep the share sheet lazy.** `ShareSheet` (and Mediabunny) load on demand
   via `src/components/lazy-share.tsx`. Don't import `share-video.ts` from a
   screen; use `src/lib/device.ts` for device checks.
+- **Strudel stays lazy.** Only `src/lib/station-engine.ts` imports `@strudel/*`, and
+  only via `import()` from `station-state.tsx` (a test enforces it). **No user text in
+  Strudel code**: `station.ts` emits fixed tokens and numbers only, like the plate SVG.
+  Station tables are meant to be tuned by ear; every pattern is evaluated in CI.
 - **Credits must stay:** the Hershey Fonts acknowledgement in
-  `src/lib/wordmark.ts` and the README, and the Mediabunny (MPL-2.0) credit in
-  the README. Regenerate the wordmark with `scripts/bake-wordmark.mjs`.
+  `src/lib/wordmark.ts` and the README, the Mediabunny (MPL-2.0) and Strudel
+  (AGPL-3.0) credits in the README. Regenerate the wordmark with `scripts/bake-wordmark.mjs`.
 
 ## Don't
 

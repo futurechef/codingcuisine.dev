@@ -6,7 +6,7 @@ export const PLATE_SHAPES = ['round', 'coupe', 'square', 'oval', 'slate', 'bowl'
 export type Shape = (typeof PLATE_SHAPES)[number]
 
 /** How the main component sits on the plate. */
-export const ARRANGEMENTS = ['logs', 'pile', 'fan', 'quenelle', 'scatter', 'stack', 'slices', 'torn', 'nest', 'mound', 'swirl', 'egg', 'halves'] as const
+export const ARRANGEMENTS = ['logs', 'pile', 'fan', 'quenelle', 'scatter', 'stack', 'slices', 'torn', 'nest', 'mound', 'swirl', 'egg', 'halves', 'omelette'] as const
 export type Kind = (typeof ARRANGEMENTS)[number]
 
 /** How the sauce goes down. */
@@ -14,7 +14,7 @@ export const SAUCE_STYLES = ['pool', 'swoosh', 'dots', 'drizzle', 'none'] as con
 export type SauceStyle = (typeof SAUCE_STYLES)[number]
 
 /** Small top-layer finishes. */
-export const GARNISHES = ['leaf', 'micro', 'seed', 'crumb', 'oil', 'flake', 'zest', 'chilli'] as const
+export const GARNISHES = ['leaf', 'micro', 'seed', 'crumb', 'oil', 'flake', 'zest', 'chilli', 'face'] as const
 export type Garnish = (typeof GARNISHES)[number]
 
 export interface PlateLook {

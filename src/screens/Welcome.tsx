@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Kitchen } from '../App'
 import { blend, byAmplitude, chain, dft, tip, type Coef, type Pt } from '../lib/fourier'
 import { navigate } from '../lib/router'
+import { useStation } from '../lib/station-state'
+import { welcomePattern, type WelcomeShape } from '../lib/station-welcome'
 import { N, plateLoop, wordmarkLoop, type Loop } from '../lib/welcome-paths'
 
 const STEPS = [4, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256]
@@ -47,6 +49,19 @@ export function Welcome({ k }: { k: Kitchen }) {
   // Slider changes after the run has finished (or with reduced motion) redraw the final frame.
   const settled = useRef(false)
   const m = STEPS[step]
+  // The circles play the word they write; slider drags settle before the music follows.
+  const [heard, setHeard] = useState(m)
+  useEffect(() => { const t = setTimeout(() => setHeard(m), 300); return () => clearTimeout(t) }, [m])
+  // The word's circles while it's written; the plate's once it morphs (a finished run rests there).
+  const [phase, setPhase] = useState<WelcomeShape>('word')
+  useEffect(() => {
+    if (reduced || settled.current) { setPhase(reduced ? 'word' : 'plate'); return }
+    setPhase('word')
+    const t = setTimeout(() => setPhase('plate'), AT_MORPH * 1000)
+    return () => clearTimeout(t)
+  }, [run, reduced])
+  const music = useMemo(() => welcomePattern(heard, phase), [heard, phase])
+  useStation({ kind: 'welcome', pattern: music })
 
   useEffect(() => {
     const cv = canvas.current!
@@ -205,7 +220,7 @@ export function Welcome({ k }: { k: Kitchen }) {
             <input
               type="range" min={0} max={STEPS.length - 1} step={1} value={step}
               aria-valuetext={`${m} circles`}
-              onChange={e => { setStep(+e.target.value); if (!settled.current && !reduced) settled.current = true }}
+              onChange={e => { setStep(+e.target.value); if (!settled.current && !reduced) { settled.current = true; setPhase('plate') } }}
             />
             <span className="mono-label epicycles__count">{m}</span>
           </label>
@@ -218,7 +233,7 @@ export function Welcome({ k }: { k: Kitchen }) {
       </figure>
 
       <div className="welcome__intro">
-        <h1 className="display display--flush">Food, drawn by code.</h1>
+        <h1 className="display display--flush display--welcome">Food, cooked in code.</h1>
         <p className="lede">
           {m} spinning circles, each with its own size, speed and starting angle, linked tip to tail.
           The last tip writes the name, then draws a plate. Fewer circles, rougher line; more circles, finer hand.

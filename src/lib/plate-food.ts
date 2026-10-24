@@ -230,6 +230,18 @@ function quenelle(b: Bed, r: Rng): Mark[] {
   })
 }
 
+/** A French omelette: one plump roll, lying a little askew, with its fold seam along one side. */
+function omelette(b: Bed, r: Rng): Mark[] {
+  const s = b.s, L = r.range(118, 126) * s, W = L * 0.44, a = r.range(-12, -6)
+  const x = b.cx + r.range(-3, 3) * s, y = b.cy + r.range(-2, 3) * s
+  const poly = organic(loc(egg(L, W), x, y, a), r, 0.6)
+  const fold = [
+    sketchLine(loc(quad([-L * 0.42, W * 0.18], [0, W * 0.36], [L * 0.42, W * 0.16]), x, y, a), r, 0.25),
+    sketchLine(loc(quad([-L * 0.3, W * 0.26], [-L * 0.1, W * 0.33], [L * 0.06, W * 0.31]), x, y, a), r, 0.2),
+  ]
+  return [piece(poly, r, { shade: 'stipple', d: W * 0.2, max: 10, fine: fold })]
+}
+
 function scatter(b: Bed, r: Rng): Mark[] {
   const s = b.s, n = 6 + r.int(6), R = 56 * s
   const ps: { x: number; y: number; r: number }[] = []
@@ -436,7 +448,7 @@ function halves(b: Bed, r: Rng): Mark[] {
   return marks
 }
 
-const MAINS: Record<Kind, (b: Bed, r: Rng) => Mark[]> = { logs, pile, fan, quenelle, scatter, stack, slices, torn, nest, mound, swirl, egg: friedEgg, halves }
+const MAINS: Record<Kind, (b: Bed, r: Rng) => Mark[]> = { logs, pile, fan, quenelle, scatter, stack, slices, torn, nest, mound, swirl, egg: friedEgg, halves, omelette }
 
 /** Draw the main and settle it on the bed: centred, and never bigger than the bed allows. */
 export function drawMain(kind: Kind, b: Bed, r: Rng): Mark[] {

@@ -3,14 +3,20 @@ import type { Kitchen } from '../App'
 import { PlateCard } from '../components/PlateCard'
 import { Radar } from '../components/Radar'
 import { ShareButton } from '../components/ShareButton'
+import { EggfaceCredit } from '../components/EggfaceCredit'
 import { useCuisineTheme } from '../lib/cuisine-theme'
 import { dish } from '../lib/dish'
 import { DOWNLOADS } from '../lib/download'
 import { navigate } from '../lib/router'
+import { StationCode } from '../components/StationCode'
+import { dishPattern } from '../lib/station'
+import { useStation } from '../lib/station-state'
 
 export function Home({ k }: { k: Kitchen }) {
   const d = useMemo(() => dish(k.plated), [k.plated])
   useCuisineTheme(d.cu)
+  const music = useMemo(() => dishPattern(d), [d])
+  useStation({ kind: 'dish', pattern: music, take: k.take, draws: true }, d.title)
 
   return (
     <main className="screen">
@@ -68,6 +74,7 @@ export function Home({ k }: { k: Kitchen }) {
           ) : !d.named && (
             <p className="mono-label mono-label--note">NO INGREDIENT IN “{d.seed.toUpperCase()}”, SO THE WORD CHOSE {d.produce.toUpperCase()}.</p>
           )}
+          <EggfaceCredit d={d} />
           <div className="chips">
             {d.chips.map(c => <span key={c} className="chip">{c}</span>)}
           </div>
@@ -76,6 +83,8 @@ export function Home({ k }: { k: Kitchen }) {
             <Radar values={d.r} />
             <div className="mono-label flavour__key">FLAVOUR<br />SWEET · SALTY · SOUR<br />BITTER · UMAMI · HEAT</div>
           </div>
+
+          <StationCode pattern={music} title={d.title} />
 
           <h3 className="section-label">INGREDIENTS</h3>
           <ul className="ingredients">

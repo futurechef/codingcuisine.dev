@@ -1,9 +1,11 @@
 import { PlateCard } from '../components/PlateCard'
 import { StepItem } from './Home'
+import { useStation } from '../lib/station-state'
 
 const FIG = { seed: 'fig', l1: 'Roast fig', l2: 'ricotta and thyme', shape: 'round', kind: 'pile', sauce: '#efe3c0', main: '#b0708a' } as const
 
 export function Parts() {
+  useStation({ kind: 'ambient' })
   return (
     <main className="screen parts">
       <h1 className="display display--flush">Parts.</h1>

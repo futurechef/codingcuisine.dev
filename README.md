@@ -51,6 +51,9 @@ The site is vegetarian: meat and fish words become a vegetarian swap with a quip
 - `src/lib/share-frame.ts` — draws one share frame on any 2D canvas (no DOM); `src/lib/share-video.ts` — MP4 encoding (WebCodecs + Mediabunny), PNG still, share-or-download; `src/lib/device.ts` — light device checks
 - `src/components/PlateCard.tsx` — the card; `draw` animates, `frozenAt` freezes mid-drawing, `bare` drops the paper
 - `src/components/ShareButton.tsx`, `ShareSheet.tsx`, `lazy-share.tsx` — the share panel, loaded on demand with a chunk-load fallback; `Stamp.tsx` — the card's plate stamp; `Radar.tsx` — the flavour radar
+- `src/lib/station.ts` — **the station** ("food, cooked by code"): a dish's drawing becomes Strudel code in five parts, one per drawn layer. Cuisine → key and instruments (`CUISINE_SOUND`); arrangement → melody (`MOTIF`); plate shape → room (`ROOM`); sauce style → bass (`SAUCE_GESTURE`); garnish → sparkle (`GARNISH_VOICE`); strokes → note density and length; colours → filter. Pure, no Strudel import. **Tune the music here.**
+- `src/lib/instruments.ts` — every voice by name; add an instrument with one line. `src/lib/station-tracks.ts` — the ambient set (paste a track into strudel.cc to tune it). `src/lib/station-welcome.ts` — the welcome circles as sine partials
+- `src/lib/station-transition.ts` — fades and the build-up with the drawing (pure, clock-driven); `src/lib/station-state.tsx` — the App-level provider and `useStation()`; `src/lib/station-engine.ts` — the only module that imports Strudel, loaded on the first press of Radio; `src/components/RadioTab.tsx`, `StationCode.tsx` — the nav button and the code beside the recipe; `src/lib/strudel-check.ts` — test helper that evaluates every pattern without audio
 - `src/**/*.test.ts(x)` — vitest suite
 - `src/screens/*` — one file per screen; `src/App.tsx` holds routing and the plated word
 
@@ -82,6 +85,10 @@ Standards. The format of the Font data in this distribution was originally
 created by James Hurt, Cognition, Inc., 900 Technology Park Drive, Billerica,
 MA 01821 (mit-eddie!ci-dandelion!hurt). SVG conversion by Windell H. Oskay
 (Evil Mad Scientist), via the MIT-licensed `hersheytext` package.
+
+Music is made in the browser with [Strudel](https://strudel.cc) (AGPL-3.0-or-later,
+used unmodified; source at https://codeberg.org/uzu/strudel). Because the site ships
+Strudel, this site's own source is published under the AGPL-3.0 too.
 
 Share videos are encoded in the browser with [Mediabunny](https://github.com/Vanilagy/mediabunny)
 (MPL-2.0, used unmodified; source at that link).

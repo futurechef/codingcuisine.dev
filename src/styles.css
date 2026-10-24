@@ -120,6 +120,20 @@ a:hover { color: var(--brand-hover); }
 }
 .tab:hover { color: var(--ink); }
 .tab[aria-current='page'] { color: var(--acc); border-bottom-color: var(--acc); }
+.radio {
+  gap: 7px;
+  background: none;
+  border-top: 0; border-left: 0; border-right: 0;
+  cursor: pointer;
+}
+.radio.is-playing { color: var(--ink); }
+.radio[aria-busy='true'] { cursor: progress; }
+.radio__meter { display: inline-flex; align-items: flex-end; gap: 2px; height: 10px; }
+.radio__meter i { width: 2px; height: 10px; background: currentColor; transform: scaleY(.35); transform-origin: bottom; }
+.radio.is-playing .radio__meter i { background: var(--acc); }
+.radio.is-playing .radio__meter i:nth-child(2) { transform: scaleY(.8); }
+.radio.is-playing .radio__meter i:nth-child(3) { transform: scaleY(.55); }
+.radio__error { align-self: center; font: 500 11px var(--mono); color: var(--mute); white-space: nowrap; }
 
 /* ---- Type ---- */
 .screen { padding: 36px var(--pad) 56px; }
@@ -136,6 +150,7 @@ a:hover { color: var(--brand-hover); }
 .display--home { margin-bottom: 28px; max-width: 11em; }
 .display--narrow { margin-bottom: 8px; max-width: 10em; }
 .display--flush { margin: 0 0 14px; }
+.display--welcome { font-size: calc(var(--h1) * .78); }
 .display--h2 { font-size: var(--h2); line-height: 1.05; margin: 10px 0 12px; letter-spacing: 0; }
 
 .lede { font-size: 16px; line-height: 1.55; margin: 0 0 18px; max-width: 34em; }
@@ -631,3 +646,21 @@ a:hover { color: var(--brand-hover); }
   .card-wrap { display: block; }
   .card { page: card; width: 6in; height: 4in; aspect-ratio: auto; box-shadow: none; break-after: page; }
 }
+
+/* ---- Station: the dish's music as code ---- */
+.station-code { margin: 28px 0; max-width: 100%; }
+.station-code__head { margin-bottom: 8px; }
+.station-code pre {
+  margin: 0;
+  padding: 14px 16px;
+  overflow-x: auto;
+  border-radius: 4px;
+  background: var(--ink);
+  color: var(--bg);
+  font: 12px/1.65 var(--mono);
+  white-space: pre;
+}
+.station-code [data-layer] { border-radius: 2px; transition: background-color .4s ease, color .4s ease; }
+.station-code [data-layer].is-on { background: color-mix(in srgb, var(--acc) 45%, transparent); }
+@media (prefers-reduced-motion: reduce) { .station-code [data-layer] { transition: none; } }
+@media print { .station-code, .radio, .radio__error { display: none; } }

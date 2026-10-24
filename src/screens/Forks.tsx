@@ -4,6 +4,9 @@ import { PlateCard } from '../components/PlateCard'
 import { useCuisineTheme } from '../lib/cuisine-theme'
 import { lineage } from '../lib/dish'
 import { useLocation } from '../lib/router'
+import { StationCode } from '../components/StationCode'
+import { dishPattern } from '../lib/station'
+import { useStation } from '../lib/station-state'
 
 function Connector() {
   return (
@@ -25,6 +28,9 @@ export function Forks({ k }: { k: Kitchen }) {
   const fw = new URLSearchParams(search).get('w')?.trim() || k.plated
   const forks = useMemo(() => lineage(fw), [fw])
   useCuisineTheme(forks[0].dish.cu)
+  const parent = forks[0].dish
+  const music = useMemo(() => dishPattern(parent), [parent])
+  useStation({ kind: 'dish', pattern: music, take: 0, draws: false }, parent.title)
 
   return (
     <main className="screen">
@@ -49,6 +55,7 @@ export function Forks({ k }: { k: Kitchen }) {
           </Fragment>
         ))}
       </ol>
+      <StationCode pattern={music} title={parent.title} />
     </main>
   )
 }

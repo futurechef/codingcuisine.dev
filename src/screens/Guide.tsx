@@ -2,11 +2,13 @@ import { useMemo, useState } from 'react'
 import { PlateCard } from '../components/PlateCard'
 import { guidePlates } from '../lib/dish'
 import { navigate } from '../lib/router'
+import { useStation } from '../lib/station-state'
 
 export function Guide() {
   const all = useMemo(guidePlates, [])
   const cuisines = useMemo(() => ['All', ...[...new Set(all.map(p => p.cu))].sort()], [all])
   const [filter, setFilter] = useState('All')
+  useStation({ kind: 'ambient' })
   const plates = all.filter(p => filter === 'All' || p.cu === filter)
 
   return (
