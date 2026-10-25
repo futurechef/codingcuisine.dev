@@ -7,7 +7,7 @@ import { dish } from '../lib/dish'
 import { useLocation } from '../lib/router'
 import { StationCode } from '../components/StationCode'
 import { dishPattern } from '../lib/station'
-import { useStation } from '../lib/station-state'
+import { useStation, useStationSound } from '../lib/station-state'
 
 /** A dish taken apart, layer by layer. */
 export function Anatomy({ k }: { k: Kitchen }) {
@@ -15,7 +15,8 @@ export function Anatomy({ k }: { k: Kitchen }) {
   const word = new URLSearchParams(search).get('w')?.trim() || k.plated
   const d = useMemo(() => dish(word), [word])
   useCuisineTheme(d.cu)
-  const music = useMemo(() => dishPattern(d), [d])
+  const sound = useStationSound()
+  const music = useMemo(() => dishPattern(d, undefined, sound), [d, sound])
   useStation({ kind: 'dish', pattern: music, take: 0, draws: true }, d.title)
   return (
     <main className="screen">

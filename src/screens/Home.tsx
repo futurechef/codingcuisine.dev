@@ -10,12 +10,13 @@ import { DOWNLOADS } from '../lib/download'
 import { navigate } from '../lib/router'
 import { StationCode } from '../components/StationCode'
 import { dishPattern } from '../lib/station'
-import { useStation } from '../lib/station-state'
+import { useStation, useStationSound } from '../lib/station-state'
 
 export function Home({ k }: { k: Kitchen }) {
   const d = useMemo(() => dish(k.plated), [k.plated])
   useCuisineTheme(d.cu)
-  const music = useMemo(() => dishPattern(d), [d])
+  const sound = useStationSound()
+  const music = useMemo(() => dishPattern(d, undefined, sound), [d, sound])
   useStation({ kind: 'dish', pattern: music, take: k.take, draws: true }, d.title)
 
   return (
