@@ -139,5 +139,7 @@ describe('the Radio menu', () => {
     const css = readFileSync('src/styles.css', 'utf8') // vitest stubs CSS imports, so read the file
     const rule = /\.radio-menu\s*\{([^}]*)\}/.exec(css)
     expect(rule?.[1]).toMatch(/position:\s*fixed/)
+    const more = /\.radio-more\s*\{([^}]*)\}/.exec(css)
+    expect(Number(/min-width:\s*(\d+)px/.exec(more?.[1] ?? '')?.[1])).toBeGreaterThanOrEqual(32) // a thumb-sized target beside Radio
   })
 })

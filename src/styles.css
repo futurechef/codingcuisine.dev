@@ -133,7 +133,7 @@ a:hover { color: var(--brand-hover); }
 .radio.is-playing .radio__meter i { background: var(--acc); }
 .radio.is-playing .radio__meter i:nth-child(2) { transform: scaleY(.8); }
 .radio.is-playing .radio__meter i:nth-child(3) { transform: scaleY(.55); }
-.radio-more { padding-left: 2px; padding-right: 2px; background: none; border-top: 0; border-left: 0; border-right: 0; cursor: pointer; }
+.radio-more { min-width: 36px; justify-content: center; padding-left: 4px; padding-right: 4px; background: none; border-top: 0; border-left: 0; border-right: 0; cursor: pointer; }
 .radio-more[aria-expanded='true'] { color: var(--ink); }
 .radio-menu {
   position: fixed;

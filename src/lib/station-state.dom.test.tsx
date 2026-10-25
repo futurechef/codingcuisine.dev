@@ -12,6 +12,7 @@ let host: HTMLDivElement, root: Root
 let status: StationStatus
 let sound: string
 let goTo: (page: 'ambient' | 'dish') => void
+let rerequest: (p: StationPattern) => void
 
 const DISH: StationPattern = { code: 'setcpm(16)\nn("0").s("sine")', parts: [], cpm: 16, label: 'Test' }
 
@@ -22,8 +23,10 @@ function Probe() {
 }
 function Page() {
   const [page, setPage] = useState<'ambient' | 'dish'>('ambient')
+  const [pattern, setPattern] = useState(DISH)
   goTo = setPage
-  useStation(page === 'dish' ? { kind: 'dish', pattern: DISH, take: 0, draws: false } : { kind: 'ambient' }, page === 'dish' ? 'Test dish' : undefined)
+  rerequest = setPattern
+  useStation(page === 'dish' ? { kind: 'dish', pattern, take: 0, draws: false } : { kind: 'ambient' }, page === 'dish' ? 'Test dish' : undefined)
   return null
 }
 
@@ -124,6 +127,23 @@ describe('the station follows your settings', () => {
     act(() => status.setSettings({ follow: true }))
     expect(status.code).toBe(DISH.code)
     expect(status.nowPlaying).toBe('Test dish')
+  })
+
+  it('follow off is remembered after a reload: the first page heard stays', () => {
+    localStorage.setItem('station-settings', JSON.stringify({ follow: false }))
+    mount(fakeEngine())
+    const first = status.code
+    act(() => goTo('dish'))
+    expect(status.code).toBe(first)
+  })
+
+  it('with follow off on a dish, a new sound still reaches the dish', () => {
+    mount(fakeEngine())
+    act(() => goTo('dish'))
+    act(() => status.setSettings({ follow: false }))
+    const recorded = { ...DISH, code: DISH.code.replace('sine', 'piano') }
+    act(() => rerequest(recorded))
+    expect(status.code).toBe(recorded.code)
   })
 
   it('volume and kitchen go straight to the engine once it is running', async () => {

@@ -6,7 +6,7 @@ import {
 } from '@strudel/web'
 import { MAX_PART_GAIN } from './station'
 import type { Kitchen } from './station-settings'
-import { kitchenGain, samplesIn } from './station-sounds'
+import { KITCHEN_TC, kitchenGain, samplesIn, warmSamples } from './station-sounds'
 import type { Transitioner } from './station-transition'
 
 let started: Promise<unknown> | undefined
@@ -43,7 +43,7 @@ export async function startEngine(t: Transitioner, ctx?: AudioContext): Promise<
   timer = setInterval(() => {
     const master = t.levels().master
     output()?.gain.setTargetAtTime(master * volume, audio.currentTime, 0.05)
-    kitchen?.gain.gain.setTargetAtTime(kitchenGain(master, volume), audio.currentTime, 0.6)
+    kitchen?.gain.gain.setTargetAtTime(kitchenGain(master, volume), audio.currentTime, KITCHEN_TC)
   }, 50)
   if (wantedKitchen !== 'off' && !kitchen) void setKitchen(wantedKitchen)
 }
@@ -70,7 +70,12 @@ export async function ensureSounds(code: string): Promise<void> {
     .catch(err => { sampleMap = undefined; throw err })
   const map = await sampleMap
   const ac = getAudioContext()
-  await Promise.all(names.flatMap(name => Object.values(map[name] as Record<string, string>).map(path => loadBuffer(map._base + path, ac, name))))
+  const files = names.flatMap(name => Object.values(map[name] as Record<string, string>).map(path => ({ name, url: map._base + path })))
+  await warmSamples(
+    files.map(f => f.url),
+    url => fetch(url).then(r => { if (!r.ok) throw new Error(`${url}: ${r.status}`) }),
+    url => loadBuffer(url, ac, files.find(f => f.url === url)!.name),
+  )
 }
 
 let wantedKitchen: Kitchen = 'off'
@@ -83,7 +88,7 @@ function dropKitchen(fade: boolean) {
   if (!old) return
   if (!fade) return old.src.stop()
   old.gain.gain.setTargetAtTime(0, old.src.context.currentTime, 0.6)
-  setTimeout(() => old.src.stop(), 3000)
+  setTimeout(() => { old.src.stop(); old.gain.disconnect() }, 3000)
 }
 
 /**

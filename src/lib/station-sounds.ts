@@ -12,6 +12,19 @@ export function samplesIn(code: string): SampleName[] {
   return found
 }
 
+/**
+ * Load every sample file: download each one first (checking it really arrived), and only
+ * then hand it to the loader. Strudel's loader remembers a failed URL for good, so a
+ * dropped request must never reach it, or "Try again" could never succeed.
+ */
+export async function warmSamples(urls: string[], fetchOk: (url: string) => Promise<void>, load: (url: string) => Promise<unknown>): Promise<void> {
+  await Promise.all(urls.map(u => fetchOk(u)))
+  await Promise.all(urls.map(u => load(u)))
+}
+
+/** How fast (seconds, time constant) the kitchen layer follows the station's level: quick enough to be gone by the end of a pause fade. */
+export const KITCHEN_TC = 0.2
+
 /** The kitchen layer's level against the music: always underneath it. */
 export const KITCHEN_LEVEL = 0.25
 

@@ -194,7 +194,17 @@ export function StationProvider({ children, loadEngine: importer }: { children: 
 
   useEffect(() => () => { clearTimeout(stopTimer.current); if (tr.playing) engine.current?.stopEngine() }, [tr])
 
-  const request = useCallback((req: StationRequest, title = '') => setLatest({ req, title }), [])
+  const request = useCallback((req: StationRequest, title = '') => {
+    setLatest({ req, title })
+    if (latestSettings.current.follow) return
+    setFrozen(f => {
+      // Follow off since a reload: the first page heard is the one that stays.
+      if (!f) return { req, title }
+      // The same dish asking again in a new sound: keep it, in that sound.
+      const same = f.req.kind === 'dish' && req.kind === 'dish' && f.title === title && f.req.take === req.take
+      return same ? { req, title } : f
+    })
+  }, [])
 
   const nowPlaying = target.kind === 'ambient' ? current.title : target.kind === 'welcome' ? 'Welcome' : shown.title
 
