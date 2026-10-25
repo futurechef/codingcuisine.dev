@@ -9,7 +9,8 @@
 // These tables are first drafts, meant to be tuned by ear.
 
 import type { Dish } from './dish'
-import { voice, type Instrument } from './instruments'
+import { voice as voiceIn, type Instrument } from './instruments'
+import type { Sound } from './station-settings'
 import type { Garnish, Kind, SauceStyle, Shape } from './look'
 import { LAYER_AT, plateLayerStats, type LayerStats } from './plate'
 import { rng } from './rng'
@@ -129,9 +130,10 @@ function cutoff(hex: string, lo: number, hi: number): number {
 
 const scale = (s: CuisineSound, octave: number) => `"${s.root}${octave}:${s.mode}"`
 
-/** The dish's music. `stats` defaults to the dish's own drawing (a seam for tests). */
-export function dishPattern(d: Dish, stats: LayerStats[] = plateLayerStats(d)): StationPattern {
-  if (d.easter === 'eggface') return eggfacePattern()
+/** The dish's music, in the Radio's sound. `stats` defaults to the dish's own drawing (a seam for tests). */
+export function dishPattern(d: Dish, stats: LayerStats[] = plateLayerStats(d), sound: Sound = 'code'): StationPattern {
+  if (d.easter === 'eggface') return eggfacePattern(sound)
+  const voice = (name: string) => voiceIn(name, sound)
   const s = CUISINE_SOUND[d.cu] ?? FALLBACK
   const r = rng(d.seed, 'station')
   const [, , sour, , umami] = d.r
@@ -200,7 +202,8 @@ function assemble(o: { header: string; cpm: number; room: { room: number; size: 
  * Eggface's song, from Eggface Music Land: the letters are the notes, E G G F A C E.
  * The tune comes in as the omelette draws and its last E lands with the chive face.
  */
-function eggfacePattern(): StationPattern {
+function eggfacePattern(sound: Sound): StationPattern {
+  const voice = (name: string) => voiceIn(name, sound)
   return assemble({
     header: '// eggface: the word is the tune · e g g f a c e',
     cpm: 20, room: ROOM.coupe, label: 'French',
