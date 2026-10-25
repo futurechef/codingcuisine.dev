@@ -112,7 +112,7 @@ export function App() {
       {screen}
       <footer className="footer">
         <div className="footer__credit">
-          Inspired by Lingdong Huang's <a href="https://github.com/LingDong-/fishdraw">fishdraw</a> and by <a href={COMPUTERDRAW_APP}>Computerdraw</a>. Recipes in the ForkRecipe format.
+          Inspired by Lingdong Huang's <a href="https://github.com/LingDong-/fishdraw">fishdraw</a> and by <a href={COMPUTERDRAW_APP}>Computerdraw</a>. Recipes in the ForkRecipe format. Recorded instruments from <a href="https://github.com/sgossner/VSCO-2-CE">VSCO 2 CE</a>.
         </div>
         <div className="mono-label">
           CODINGCUISINE.DEV · PLATEDRAW · <a href="https://github.com/futurechef/codingcuisine.dev">SOURCE</a> · AGPL-3.0

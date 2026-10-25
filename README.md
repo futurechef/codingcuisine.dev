@@ -90,5 +90,10 @@ Music is made in the browser with [Strudel](https://strudel.cc) (AGPL-3.0-or-lat
 used unmodified; source at https://codeberg.org/uzu/strudel). Because the site ships
 Strudel, this site's own source is published under the AGPL-3.0 too.
 
+The Radio's recorded instruments (strings, harp, upright piano) come from the
+[VSCO 2 Community Edition](https://github.com/sgossner/VSCO-2-CE) by Versilian Studios
+(CC0-1.0); the upright piano was sampled by Simon Dalzell of Ivy Audio. They're trimmed
+and converted to MP3 by `scripts/station-samples.py` and served from `public/station/`.
+
 Share videos are encoded in the browser with [Mediabunny](https://github.com/Vanilagy/mediabunny)
 (MPL-2.0, used unmodified; source at that link).

@@ -1,0 +1,73 @@
+{
+ "_base": "/station/",
+ "cellos": {
+  "c2": "cellos/c2.mp3",
+  "e2": "cellos/e2.mp3",
+  "g2": "cellos/g2.mp3",
+  "b2": "cellos/b2.mp3",
+  "d3": "cellos/d3.mp3",
+  "f3": "cellos/f3.mp3",
+  "a3": "cellos/a3.mp3",
+  "c4": "cellos/c4.mp3"
+ },
+ "contrabass": {
+  "c2": "contrabass/c2.mp3",
+  "e2": "contrabass/e2.mp3",
+  "gs2": "contrabass/gs2.mp3",
+  "cs3": "contrabass/cs3.mp3",
+  "e3": "contrabass/e3.mp3",
+  "gs3": "contrabass/gs3.mp3"
+ },
+ "harp": {
+  "d2": "harp/d2.mp3",
+  "f2": "harp/f2.mp3",
+  "a2": "harp/a2.mp3",
+  "c3": "harp/c3.mp3",
+  "e3": "harp/e3.mp3",
+  "g3": "harp/g3.mp3",
+  "b3": "harp/b3.mp3",
+  "d4": "harp/d4.mp3",
+  "f4": "harp/f4.mp3",
+  "a4": "harp/a4.mp3",
+  "c5": "harp/c5.mp3",
+  "e5": "harp/e5.mp3"
+ },
+ "piano": {
+  "cs2": "piano/cs2.mp3",
+  "f2": "piano/f2.mp3",
+  "a2": "piano/a2.mp3",
+  "cs3": "piano/cs3.mp3",
+  "f3": "piano/f3.mp3",
+  "a3": "piano/a3.mp3",
+  "cs4": "piano/cs4.mp3",
+  "f4": "piano/f4.mp3",
+  "a4": "piano/a4.mp3",
+  "cs5": "piano/cs5.mp3",
+  "f5": "piano/f5.mp3",
+  "a5": "piano/a5.mp3",
+  "cs6": "piano/cs6.mp3",
+  "f6": "piano/f6.mp3"
+ },
+ "violas": {
+  "c3": "violas/c3.mp3",
+  "e3": "violas/e3.mp3",
+  "g3": "violas/g3.mp3",
+  "b3": "violas/b3.mp3",
+  "d4": "violas/d4.mp3",
+  "f4": "violas/f4.mp3",
+  "a4": "violas/a4.mp3",
+  "c5": "violas/c5.mp3"
+ },
+ "violins": {
+  "g3": "violins/g3.mp3",
+  "b3": "violins/b3.mp3",
+  "d4": "violins/d4.mp3",
+  "fs4": "violins/fs4.mp3",
+  "a4": "violins/a4.mp3",
+  "c5": "violins/c5.mp3",
+  "e5": "violins/e5.mp3",
+  "g5": "violins/g5.mp3",
+  "b5": "violins/b5.mp3",
+  "d6": "violins/d6.mp3"
+ }
+}
