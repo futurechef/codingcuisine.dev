@@ -1,6 +1,6 @@
 # Station sound: design
 
-**Status:** approved by the owner on 2026-10-25, to ship in three stages (below).
+**Status:** approved by the owner on 2026-10-25, to ship in three stages (below). Stage 1 built 2026-10-25.
 **Builds on:** `2026-10-24-station-design.md` (the station as shipped). Everything there
 still holds unless this document changes it.
 **Goal:** the station's background music becomes the part of the site that inspires. It gets

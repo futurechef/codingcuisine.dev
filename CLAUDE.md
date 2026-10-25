@@ -55,6 +55,10 @@ AlcheMISE (the meal planner). It shares only AlcheMISE's Firebase project.
 - **Strudel stays lazy.** Only `src/lib/station-engine.ts` imports `@strudel/*`, and
   only via `import()` from `station-state.tsx` (a test enforces it). **No user text in
   Strudel code**: `station.ts` emits fixed tokens and numbers only, like the plate SVG.
+- **Station sounds are self-hosted and licence-checked.** Recorded instruments and kitchen
+  loops live in `public/station/` (built by `scripts/station-samples.py`), CC0 or public
+  domain only, credited in the README and footer. Chef's Table tracks arrange
+  public-domain scores only; never copy a recording or a modern composer.
   Station tables are meant to be tuned by ear; every pattern is evaluated in CI.
 - **Credits must stay:** the Hershey Fonts acknowledgement in
   `src/lib/wordmark.ts` and the README, the Mediabunny (MPL-2.0) and Strudel

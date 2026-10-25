@@ -52,7 +52,7 @@ The site is vegetarian: meat and fish words become a vegetarian swap with a quip
 - `src/components/PlateCard.tsx` — the card; `draw` animates, `frozenAt` freezes mid-drawing, `bare` drops the paper
 - `src/components/ShareButton.tsx`, `ShareSheet.tsx`, `lazy-share.tsx` — the share panel, loaded on demand with a chunk-load fallback; `Stamp.tsx` — the card's plate stamp; `Radar.tsx` — the flavour radar
 - `src/lib/station.ts` — **the station** ("food, cooked by code"): a dish's drawing becomes Strudel code in five parts, one per drawn layer. Cuisine → key and instruments (`CUISINE_SOUND`); arrangement → melody (`MOTIF`); plate shape → room (`ROOM`); sauce style → bass (`SAUCE_GESTURE`); garnish → sparkle (`GARNISH_VOICE`); strokes → note density and length; colours → filter. Pure, no Strudel import. **Tune the music here.**
-- `src/lib/instruments.ts` — every voice by name; add an instrument with one line. `src/lib/station-tracks.ts` — the ambient set (paste a track into strudel.cc to tune it). `src/lib/station-welcome.ts` — the welcome circles as sine partials
+- `src/lib/instruments.ts` — every voice by name; add an instrument with one line. `src/lib/station-tracks.ts` (+ `-classic.ts` Chef's Table, `-eno.ts` Eno and Mix) — the ambient styles, written for the recorded instruments (paste a track into strudel.cc to tune it; the code sound swaps samples for synths). `src/lib/station-settings.ts` + `src/components/RadioMenu.tsx` — the Radio ▾ settings. `public/station/` — recorded instruments and kitchen loops, rebuilt with `scripts/station-samples.py`. `src/lib/station-welcome.ts` — the welcome circles as sine partials
 - `src/lib/station-transition.ts` — fades and the build-up with the drawing (pure, clock-driven); `src/lib/station-state.tsx` — the App-level provider and `useStation()`; `src/lib/station-engine.ts` — the only module that imports Strudel, loaded on the first press of Radio; `src/components/RadioTab.tsx`, `StationCode.tsx` — the nav button and the code beside the recipe; `src/lib/station-render.ts` + `share-audio.ts` — the share video's soundtrack: the dish's music rendered offline for the 7 s clip (AAC; silent where the browser can't encode it); `src/lib/strudel-check.ts` — test helper that evaluates every pattern without audio
 - `src/**/*.test.ts(x)` — vitest suite
 - `src/screens/*` — one file per screen; `src/App.tsx` holds routing and the plated word
@@ -94,6 +94,8 @@ The Radio's recorded instruments (strings, harp, upright piano) come from the
 [VSCO 2 Community Edition](https://github.com/sgossner/VSCO-2-CE) by Versilian Studios
 (CC0-1.0); the upright piano was sampled by Simon Dalzell of Ivy Audio. They're trimmed
 and converted to MP3 by `scripts/station-samples.py` and served from `public/station/`.
+The kitchen layer uses "Rain against the window" by cori (public domain, via pdsounds.org
+and Wikimedia Commons) and "Cafe ambiance" by Marble Toast (CC0, Wikimedia Commons).
 
 Share videos are encoded in the browser with [Mediabunny](https://github.com/Vanilagy/mediabunny)
 (MPL-2.0, used unmodified; source at that link).
