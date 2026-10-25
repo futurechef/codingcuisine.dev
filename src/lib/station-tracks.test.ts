@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { SAMPLES } from './instruments'
+import { onsets } from './strudel-check'
 import { startIndex, trackCode, TRACKS, tracksFor } from './station-tracks'
 
 const SYNTHS = ['sine', 'triangle', 'sawtooth', 'square', 'pink', 'white', 'brown']
@@ -58,6 +59,14 @@ describe('the ambient styles', () => {
       expect(Number(cpm[0][1]), t.id).toBeLessThanOrEqual(20)
       expect(t.title.length, t.id).toBeGreaterThan(2)
       expect(t.minutes, t.id).toBeGreaterThanOrEqual(2)
+    }
+  })
+
+  it('recorded notes never run out: something is struck at least every cycle (samples last ~6 s)', async () => {
+    for (const t of [...tracksFor('chefs-table'), ...tracksFor('mix')]) {
+      const times = [...new Set((await onsets(t.code, 32)).map(x => Math.round(x * 1000) / 1000))].sort((a, b) => a - b)
+      const gaps = times.slice(1).map((x, i) => x - times[i])
+      expect(Math.max(...gaps), t.id).toBeLessThanOrEqual(1)
     }
   })
 

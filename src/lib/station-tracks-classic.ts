@@ -20,7 +20,7 @@ stack(
     .s("violins").attack(.8).release(3).velocity(.55),
   note("[eb3 g3 bb3 g3]*2").s("harp").release(.8).lpf(2600).velocity(.3)
     .mask("<1 1 1 1 0 1 1 1>"),
-  note("<eb2 bb1 c2 g1>").s("cellos").attack(2).release(4).slow(2).velocity(.5)
+  note("<eb2 bb1 c2 g1>").slow(2).segment(1).s("cellos").attack(2).release(4).velocity(.5)
 ).room(.6).roomsize(5)`,
   },
   {
@@ -36,7 +36,7 @@ stack(
     .s("violins").attack(1).release(3).velocity(.5),
   note("d3 d2 c#3 c#2 b2 b1 a2 a1 g2 g1 f#2 f#1 e2 e1 a2 a1").slow(4)
     .s("cellos").attack(.2).release(1.5).velocity(.45),
-  note("<[d4,f#4] [c#4,e4] [b3,d4] [a3,c#4]>").slow(2)
+  note("<[d4,f#4] [c#4,e4] [b3,d4] [a3,c#4]>").slow(2).segment(1)
     .s("violas").attack(2).release(4).velocity(.3)
 ).room(.55).roomsize(5)`,
   },
@@ -66,7 +66,7 @@ setcpm(15)
 stack(
   note("<[f5,ab5]@2 [db5,f5] [eb5,gb5]@2 [db5,f5] [c5,eb5] [db5,f5] [c5,eb5]@2 [bb4,db5]@2>").slow(2)
     .s("piano").release(3).velocity(.45),
-  note("<db3 ab2 bb2 gb2>").slow(2).s("cellos").attack(2.5).release(5).velocity(.35),
+  note("<db3 ab2 bb2 gb2>").slow(2).segment(1).s("cellos").attack(2.5).release(5).velocity(.35),
   note("[db4 f4 ab4 db5]").slow(2).s("harp").release(1).velocity(.2).degradeBy(.4)
 ).room(.65).roomsize(6)`,
   },
@@ -83,7 +83,7 @@ stack(
     .s("piano").release(3).velocity(.5),
   note("<[g3,b3,e4] [g3,b3,d#4] [f#3,a3,d#4] [f3,a3,d4] [f3,a3,c4] [e3,a3,c4] [e3,g3,b3] [d#3,f#3,b3]>")
     .ply(4).s("piano").release(1.2).velocity(.25),
-  note("<e2 e2 b1 b1>").slow(2).s("cellos").attack(3).release(5).velocity(.3)
+  note("<e2 e2 b1 b1>").slow(2).segment(1).s("cellos").attack(3).release(5).velocity(.3)
 ).room(.55).roomsize(5)`,
   },
 ]

@@ -83,7 +83,7 @@ stack(
   note("d4 ~ ~ ~ ~ ~ ~").slow(7).s("piano").release(4).velocity(.35),
   note("~ ~ ~ a4 ~ ~ ~ ~ ~ ~ ~").slow(11).s("piano").release(4).velocity(.3),
   note("~ ~ ~ ~ ~ ~ f#4 ~ ~ ~ ~ ~ ~").slow(13).s("harp").release(2).velocity(.28),
-  note("<d3 b2 g2 a2>").slow(4).s("cellos").attack(3).release(6).velocity(.35)
+  note("<d3 b2 g2 a2>").slow(4).segment(1).s("cellos").attack(3).release(6).velocity(.35)
 ).room(.7).roomsize(7)`,
   },
   {
@@ -99,7 +99,7 @@ stack(
   note("bb4 ~ ~ ~ ~ ~ ~").slow(7).s("piano").release(4).velocity(.3),
   note("~ ~ ~ ~ d5 ~ ~ ~ ~ ~ ~").slow(11).s("piano").release(4).velocity(.28),
   note("~ ~ ~ ~ ~ ~ ~ ~ f5 ~ ~ ~ ~").slow(13).s("piano").release(4).velocity(.25),
-  note("<[g3,d4] [eb3,bb3] [c3,g3] [d3,a3]>").slow(4).s("violas").attack(3).release(6).velocity(.25)
+  note("<[g3,d4] [eb3,bb3] [c3,g3] [d3,a3]>").slow(4).segment(1).s("violas").attack(3).release(6).velocity(.25)
 ).room(.7).roomsize(7)`,
   },
   {
@@ -115,7 +115,7 @@ stack(
   note("c4 ~ ~ ~ ~ ~ ~").slow(7).s("harp").release(2).velocity(.3),
   note("~ ~ g4 ~ ~ ~ ~ ~ ~ ~ ~").slow(11).s("harp").release(2).velocity(.28),
   note("~ ~ ~ ~ ~ ~ ~ ~ ~ e4 ~ ~ ~").slow(13).s("piano").release(4).velocity(.28),
-  note("<c3 a2 f2 g2>").slow(4).s("cellos").attack(3).release(6).velocity(.32)
+  note("<c3 a2 f2 g2>").slow(4).segment(1).s("cellos").attack(3).release(6).velocity(.32)
 ).room(.65).roomsize(6)`,
   },
   {
@@ -131,7 +131,7 @@ stack(
   note("e5 ~ ~ ~ ~ ~ ~").slow(7).s("piano").release(4).velocity(.3),
   note("~ ~ ~ ~ ~ c5 ~ ~ ~ ~ ~").slow(11).s("harp").release(2).velocity(.28),
   note("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ g5 ~ ~").slow(13).s("piano").release(4).velocity(.25),
-  note("<a2 f2 c3 e2>").slow(4).s("contrabass").attack(3).release(6).velocity(.32)
+  note("<a2 f2 c3 e2>").slow(4).segment(1).s("contrabass").attack(3).release(6).velocity(.32)
 ).room(.7).roomsize(7)`,
   },
 ]
