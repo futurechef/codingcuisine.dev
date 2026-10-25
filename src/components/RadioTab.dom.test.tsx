@@ -32,7 +32,7 @@ afterEach(() => {
 describe('RadioTab', () => {
   it('starts as a play button', () => {
     mount(async () => ({ startEngine: vi.fn(), playCode: vi.fn(), stopEngine: vi.fn() }))
-    expect(button().getAttribute('aria-label')).toBe('Play station')
+    expect(button().getAttribute('aria-label')).toBe('Play Radio')
     expect(button().getAttribute('aria-pressed')).toBe('false')
     expect(button().textContent).toContain('Radio')
   })
@@ -45,7 +45,7 @@ describe('RadioTab', () => {
     expect(loader).toHaveBeenCalledTimes(1)
     expect(engine.startEngine).toHaveBeenCalledTimes(1)
     expect(engine.playCode).toHaveBeenCalledTimes(1) // the ambient set, before any page asks for a dish
-    expect(button().getAttribute('aria-label')).toBe('Pause station')
+    expect(button().getAttribute('aria-label')).toBe('Pause Radio')
     expect(button().getAttribute('aria-pressed')).toBe('true')
   })
 
