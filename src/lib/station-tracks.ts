@@ -1,16 +1,34 @@
-// The station's ambient set: what plays on pages without one dish (Field guide, Parts).
+// The station's ambient styles: what plays on pages without one dish (Field guide, Parts).
 // Each track is plain Strudel code: paste one into https://strudel.cc to tune it by ear,
 // then paste it back. Rules of the house: one setcpm between 15 and 20, slow attacks,
 // nothing loud up front. It should sit behind someone cooking.
+//
+// Styles: Chef's Table (station-tracks-classic.ts), Eno and Mix (station-tracks-eno.ts), and
+// the Originals below. New tracks are written for the recorded instruments, s("cellos") and
+// so on; the code sound swaps each sample for its stand-in synth (SAMPLE_STANDIN).
 
+import { SAMPLES, SAMPLE_STANDIN, type SampleName } from './instruments'
 import type { StationPattern } from './station'
+import type { Sound, Style } from './station-settings'
+import { CHEFS_TABLE } from './station-tracks-classic'
+import { ENO, MIX } from './station-tracks-eno'
 
-export interface AmbientTrack { id: string; title: string; code: string; minutes: number }
+export interface AmbientTrack {
+  id: string
+  title: string
+  /** What a Chef's Table track is based on: "after Satie, Gymnopédie No. 1". */
+  after?: string
+  style: Style
+  minutes: number
+  /** Written for the recorded instruments. */
+  code: string
+}
 
-export const AMBIENT: readonly AmbientTrack[] = [
+const ORIGINALS: readonly AmbientTrack[] = [
   {
     id: 'simmer',
     title: 'Simmer',
+    style: 'originals',
     minutes: 4,
     code: `// Simmer: a low bubbling pad, small notes rising like steam
 setcpm(16)
@@ -22,6 +40,7 @@ stack(
   {
     id: 'proving',
     title: 'Proving dough',
+    style: 'originals',
     minutes: 5,
     code: `// Proving dough: warm, slow, rising by a step every few bars
 setcpm(15)
@@ -33,6 +52,7 @@ stack(
   {
     id: 'mise',
     title: 'Mise',
+    style: 'originals',
     minutes: 3,
     code: `// Mise: everything in its place, an even pluck over a soft floor
 setcpm(18)
@@ -44,6 +64,7 @@ stack(
   {
     id: 'low-oven',
     title: 'Low oven',
+    style: 'originals',
     minutes: 5,
     code: `// Low oven: a long drone with glass tones, for a slow braise
 setcpm(15)
@@ -55,6 +76,7 @@ stack(
   {
     id: 'steam',
     title: 'Steam',
+    style: 'originals',
     minutes: 4,
     code: `// Steam: breath and bells, light as a lid lifting
 setcpm(17)
@@ -67,6 +89,7 @@ stack(
   {
     id: 'rest',
     title: 'Rest the pan',
+    style: 'originals',
     minutes: 3,
     code: `// Rest the pan: almost nothing, settling down
 setcpm(15)
@@ -77,8 +100,29 @@ stack(
   },
 ]
 
+export const TRACKS: readonly AmbientTrack[] = [...MIX, ...CHEFS_TABLE, ...ENO, ...ORIGINALS]
+
+export function tracksFor(style: Style): AmbientTrack[] {
+  return TRACKS.filter(t => t.style === style)
+}
+
+const SAMPLE_CALL = /\bs\("([a-z]+)"\)/g
+
+/** The track's code in the given sound: as written for recorded, stand-in synths for code. */
+export function trackCode(t: AmbientTrack, sound: Sound): string {
+  if (sound === 'recorded') return t.code
+  return t.code.replace(SAMPLE_CALL, (call, name: string) =>
+    (SAMPLES as readonly string[]).includes(name) ? SAMPLE_STANDIN[name as SampleName] : call)
+}
+
+/** Where a style's fixed rotation starts today (`day` = days since the epoch), so it varies by day. */
+export function startIndex(n: number, day: number): number {
+  return n > 0 ? ((day % n) + n) % n : 0
+}
+
 /** An ambient track as the station plays it: steady, no build-up. */
-export function ambientPattern(t: AmbientTrack): StationPattern {
-  const cpm = Number(/setcpm\(([\d.]+)\)/.exec(t.code)?.[1] ?? 16)
-  return { code: t.code, parts: [], cpm, label: 'Ambient' }
+export function ambientPattern(t: AmbientTrack, sound: Sound = 'code'): StationPattern {
+  const code = trackCode(t, sound)
+  const cpm = Number(/setcpm\(([\d.]+)\)/.exec(code)?.[1] ?? 16)
+  return { code, parts: [], cpm, label: 'Ambient' }
 }

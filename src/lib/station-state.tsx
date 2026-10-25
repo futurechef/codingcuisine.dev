@@ -4,7 +4,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import type { StationPattern } from './station'
-import { AMBIENT, ambientPattern, type AmbientTrack } from './station-tracks'
+import { ambientPattern, tracksFor, type AmbientTrack } from './station-tracks'
 import { PAUSE_MS, Transitioner, type Levels, type Target } from './station-transition'
 
 type Engine = typeof import('./station-engine')
@@ -43,7 +43,7 @@ const StationContext = createContext<Ctx | null>(null)
 
 /** Ambient tracks in a fresh shuffled order per visit (the one place randomness is fine: it isn't a dish). */
 function shuffled(): AmbientTrack[] {
-  const a = AMBIENT.slice()
+  const a = tracksFor('originals')
   for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]] }
   return a
 }
