@@ -31,9 +31,9 @@ describe('the recorded instruments', () => {
     expect(total).toBeLessThan(4.5 * MB)
   })
 
-  it('kitchen loops are each under 1 MB', () => {
+  it('kitchen loops exist and are each under 1 MB', () => {
     const k = `${DIR}/kitchen`
-    if (!existsSync(k)) return
+    for (const name of ['rain', 'cafe']) expect(existsSync(`${k}/${name}.mp3`), name).toBe(true)
     for (const f of readdirSync(k, { recursive: true })) {
       if (statSync(`${k}/${f}`).isFile()) expect(statSync(`${k}/${f}`).size, f).toBeLessThan(MB)
     }

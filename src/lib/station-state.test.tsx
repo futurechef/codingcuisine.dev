@@ -10,7 +10,7 @@ import tracksSrc from './station-tracks.ts?raw'
 
 describe('loadEngine (the site keeps working if the station chunk fails)', () => {
   it('returns the engine when the chunk loads', async () => {
-    const fake = { startEngine: async () => {}, playCode: () => {}, stopEngine: () => {} }
+    const fake = { startEngine: async () => {}, playCode: () => {}, stopEngine: () => {}, setVolume: () => {}, ensureSounds: async () => {}, setKitchen: async () => {} }
     expect((await loadEngine(async () => fake)).engine).toBe(fake)
   })
   it('returns failed instead of throwing when the chunk fails to load', async () => {

@@ -9,8 +9,14 @@ Sources (all redistributable, credited in README.md):
     Strings/Harp (mf)                    -> harp
     Keys/Upright Piano (dyn1; Simon Dalzell / Ivy Audio, redistributable) -> piano
 
+Kitchen layer (public/station/kitchen/<name>.mp3), from Wikimedia Commons:
+    rain: "Rain against the window.ogg" by cori, via pdsounds.org (public domain;
+          decoded from Commons' MP3 transcode, start 20 s)
+    cafe: "Cafe ambiance.ogg" by Marble Toast (CC0; start 300 s)
+
 Usage (in a venv with numpy, soundfile, lameenc):
   python scripts/station-samples.py <dir of downloaded wavs named <sample>_<anything>.wav>
+  python scripts/station-samples.py kitchen <name> <recording> <start seconds>
 
 Pitch comes from the file name: VSCO's string names run an octave low (OCTAVE_UP), and the
 piano files are numbered by the MappingChart (file NNN = MIDI key 21 + 2*NNN). Each file's
@@ -109,5 +115,31 @@ def main(src: str) -> None:
     (OUT / 'strudel.json').write_text(json.dumps(sample_map, indent=1) + '\n', encoding='utf-8')
 
 
+LOOP = 45.0      # seconds in the loop
+CROSSFADE = 3.0  # tail blended into the head so the loop has no seam
+
+
+def kitchen(name: str, src: str, start: float) -> None:
+    """A seamless mono loop at a steady, quiet level (RMS -20 dBFS; the engine sets the mix)."""
+    x, rate = sf.read(src, always_2d=True)
+    x = x.mean(axis=1)
+    a, n, f = int(start * rate), int(LOOP * rate), int(CROSSFADE * rate)
+    seg = x[a:a + n + f].copy()
+    if len(seg) < n + f:
+        raise SystemExit(f'{src}: not enough audio after {start} s')
+    t = np.linspace(0, np.pi / 2, f)
+    out = seg[:n].copy()
+    out[:f] = seg[:f] * np.sin(t) + seg[n:n + f] * np.cos(t)  # equal-power blend
+    out *= (10 ** (-20 / 20)) / max(np.sqrt(np.mean(out ** 2)), 1e-9)
+    out = np.clip(out, -0.98, 0.98)
+    dest = OUT / 'kitchen' / f'{name}.mp3'
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_bytes(encode(out, rate))
+    print(f'{src} -> kitchen/{name}.mp3 ({dest.stat().st_size // 1024} KB)')
+
+
 if __name__ == '__main__':
-    main(sys.argv[1])
+    if sys.argv[1] == 'kitchen':
+        kitchen(sys.argv[2], sys.argv[3], float(sys.argv[4]))
+    else:
+        main(sys.argv[1])

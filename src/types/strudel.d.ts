@@ -21,6 +21,7 @@ declare module '@strudel/web' {
   export function setAudioContext(ctx: AudioContext): AudioContext
   export function resetGlobalEffects(): void
   export function getSuperdoughAudioController(): { output: { destinationGain: GainNode | null } }
+  export function loadBuffer(url: string, ac: BaseAudioContext, s?: string, n?: number): Promise<AudioBuffer>
 }
 declare module '@strudel/webaudio' {
   export function registerSynthSounds(): Promise<void>
