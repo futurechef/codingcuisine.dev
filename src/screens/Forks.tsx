@@ -6,7 +6,7 @@ import { lineage } from '../lib/dish'
 import { useLocation } from '../lib/router'
 import { StationCode } from '../components/StationCode'
 import { dishPattern } from '../lib/station'
-import { useStation } from '../lib/station-state'
+import { useStation, useStationSound } from '../lib/station-state'
 
 function Connector() {
   return (
@@ -29,7 +29,8 @@ export function Forks({ k }: { k: Kitchen }) {
   const forks = useMemo(() => lineage(fw), [fw])
   useCuisineTheme(forks[0].dish.cu)
   const parent = forks[0].dish
-  const music = useMemo(() => dishPattern(parent), [parent])
+  const sound = useStationSound()
+  const music = useMemo(() => dishPattern(parent, undefined, sound), [parent, sound])
   useStation({ kind: 'dish', pattern: music, take: 0, draws: false }, parent.title)
 
   return (

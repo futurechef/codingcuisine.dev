@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { dish, type Dish } from './dish'
 import { CPM_MAX, CPM_MIN, dishPattern } from './station'
-import { AMBIENT, ambientPattern } from './station-tracks'
+import { TRACKS, ambientPattern, trackCode } from './station-tracks'
 import { haps, notesIn, onsets } from './strudel-check'
 
 /** One real dish per cuisine. */
@@ -33,18 +33,18 @@ describe('station patterns are real Strudel', () => {
   }, 30_000) // evaluates 200 patterns: ~2 s here, slower on CI runners
 
   it('ambient tracks parse and stay calm', async () => {
-    expect(AMBIENT.length).toBeGreaterThanOrEqual(5)
-    expect(AMBIENT.length).toBeLessThanOrEqual(8)
-    expect(new Set(AMBIENT.map(t => t.id)).size).toBe(AMBIENT.length)
-    for (const t of AMBIENT) {
-      expect(await haps(t.code, 4), t.id).toBeGreaterThan(0)
+    expect(TRACKS.length).toBeGreaterThanOrEqual(19)
+    expect(new Set(TRACKS.map(t => t.id)).size).toBe(TRACKS.length)
+    for (const t of TRACKS) {
+      for (const sound of ['code', 'recorded'] as const) expect(await haps(trackCode(t, sound), 8), `${t.id} ${sound}`).toBeGreaterThan(0)
       const cpm = [...t.code.matchAll(/setcpm\(([\d.]+)\)/g)]
       expect(cpm, t.id).toHaveLength(1)
       expect(Number(cpm[0][1])).toBeGreaterThanOrEqual(CPM_MIN)
       expect(Number(cpm[0][1])).toBeLessThanOrEqual(CPM_MAX)
-      expect(ambientPattern(t)).toMatchObject({ code: t.code, parts: [], label: 'Ambient' })
+      expect(ambientPattern(t, 'recorded')).toMatchObject({ code: t.code, parts: [], label: 'Ambient' })
+      expect(ambientPattern(t, 'code').code).toBe(trackCode(t, 'code'))
     }
-  })
+  }, 30_000)
 
   it('a broken pattern fails', async () => {
     await expect(haps('stack(note("c3 [e3"))')).rejects.toThrow()

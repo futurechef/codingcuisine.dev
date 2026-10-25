@@ -74,6 +74,13 @@ describe('the Eggface easter egg', () => {
     expect(lastE).toBeLessThanOrEqual(3.9) // …and is done by 3.9 s
   })
 
+  it('plays the same tune on recorded instruments', async () => {
+    const p = dishPattern(dish('Eggface'), undefined, 'recorded')
+    expect(p.code).toContain('note("e4 g4 g4 f4 a4 c5 e5')
+    expect(p.code).not.toBe(dishPattern(dish('Eggface')).code)
+    expect(await haps(p.code, 4)).toBeGreaterThan(0)
+  })
+
   it('credits the game with a real App Store link', () => {
     expect(EGGFACE_APP).toBe('https://apps.apple.com/us/app/eggface-music-land/id6817093907')
   })
