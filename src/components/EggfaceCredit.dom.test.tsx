@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client'
 import { describe, expect, it } from 'vitest'
 import { EggfaceCredit } from './EggfaceCredit'
 import { dish } from '../lib/dish'
-import { COMPUTERDRAW_APP, EGGFACE_APP } from '../lib/eggface'
+import { COLIN_JPEG, COMPUTERDRAW_APP, EGGFACE_APP } from '../lib/eggface'
 import appSrc from '../App.tsx?raw'
 
 ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
@@ -35,5 +35,10 @@ describe('credits', () => {
   it('the footer credits Computerdraw as an inspiration for Platedraw', () => {
     expect(appSrc).toContain('COMPUTERDRAW_APP')
     expect(COMPUTERDRAW_APP).toBe('https://apps.apple.com/us/app/computerdraw/id6782483424')
+  })
+
+  it('the footer credits colin.jpeg as an inspiration for the Station', () => {
+    expect(appSrc).toContain('COLIN_JPEG')
+    expect(COLIN_JPEG).toBe('https://www.instagram.com/colin.jpeg/')
   })
 })

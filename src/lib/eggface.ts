@@ -6,6 +6,8 @@ import type { Dish } from './dish'
 
 export const EGGFACE_APP = 'https://apps.apple.com/us/app/eggface-music-land/id6817093907'
 export const COMPUTERDRAW_APP = 'https://apps.apple.com/us/app/computerdraw/id6782483424'
+/** colin.jpeg: live-coded Strudel with ASCII scenes that move to the beat. Inspiration for the Station. */
+export const COLIN_JPEG = 'https://www.instagram.com/colin.jpeg/'
 
 /** "Eggface", however it's typed: any case, with a space or hyphen in the middle. */
 export function isEggface(word: string): boolean {

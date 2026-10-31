@@ -97,5 +97,11 @@ and converted to MP3 by `scripts/station-samples.py` and served from `public/sta
 The kitchen layer uses "Rain against the window" by cori (public domain, via pdsounds.org
 and Wikimedia Commons) and "Cafe ambiance" by Marble Toast (CC0, Wikimedia Commons).
 
+Platedraw is inspired by Lingdong Huang's [fishdraw](https://github.com/LingDong-/fishdraw)
+and by [Computerdraw](https://apps.apple.com/us/app/computerdraw/id6782483424). The Station
+is also inspired by [colin.jpeg](https://www.instagram.com/colin.jpeg/)'s live-coded Strudel
+videos, where the code, its pattern grids and an ASCII scene all move to the beat. See
+[docs/inspiration.md](docs/inspiration.md).
+
 Share videos are encoded in the browser with [Mediabunny](https://github.com/Vanilagy/mediabunny)
 (MPL-2.0, used unmodified; source at that link).
