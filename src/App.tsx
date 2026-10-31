@@ -3,7 +3,7 @@ import { DEFAULT_WORD, SURPRISE_WORDS } from './lib/dish'
 import { navigate, useLocation } from './lib/router'
 import { StationProvider } from './lib/station-state'
 import { RadioTab } from './components/RadioTab'
-import { COMPUTERDRAW_APP } from './lib/eggface'
+import { COLIN_JPEG, COMPUTERDRAW_APP } from './lib/eggface'
 import { routeSeo, useSeo } from './lib/seo'
 import { Home } from './screens/Home'
 import { Forks } from './screens/Forks'
@@ -112,7 +112,7 @@ export function App() {
       {screen}
       <footer className="footer">
         <div className="footer__credit">
-          Inspired by Lingdong Huang's <a href="https://github.com/LingDong-/fishdraw">fishdraw</a> and by <a href={COMPUTERDRAW_APP}>Computerdraw</a>. Recipes in the ForkRecipe format. Recorded instruments from <a href="https://github.com/sgossner/VSCO-2-CE">VSCO 2 CE</a>; kitchen sounds by cori and Marble Toast via <a href="https://commons.wikimedia.org">Wikimedia Commons</a>.
+          Inspired by Lingdong Huang's <a href="https://github.com/LingDong-/fishdraw">fishdraw</a> by <a href={COMPUTERDRAW_APP}>Computerdraw</a>, and by <a href={COLIN_JPEG}>colin.jpeg</a>'s live-coded Strudel. Recipes in the ForkRecipe format. Recorded instruments from <a href="https://github.com/sgossner/VSCO-2-CE">VSCO 2 CE</a>; kitchen sounds by cori and Marble Toast via <a href="https://commons.wikimedia.org">Wikimedia Commons</a>.
         </div>
         <div className="mono-label">
           CODINGCUISINE.DEV · PLATEDRAW · <a href="https://github.com/futurechef/codingcuisine.dev">SOURCE</a> · AGPL-3.0
